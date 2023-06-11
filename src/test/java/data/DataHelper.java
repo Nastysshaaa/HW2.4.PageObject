@@ -23,5 +23,16 @@ public class DataHelper {
         public static VerificationCode getVerificationCodeFor(AuthInfo authInfo) {
             return new VerificationCode("12345");
         }
+    public static String firstCardNumber() {
+
+        String number = "5559 0000 0000 0001";
+        return number;
+    }
+
+    public static String secondCardNumber() {
+
+        String number = "5559 0000 0000 0002";
+        return number;
+    }
     }
 
