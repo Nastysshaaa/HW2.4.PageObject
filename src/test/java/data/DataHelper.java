@@ -15,14 +15,15 @@ public class DataHelper {
     public static AuthInfo getAuthInfo() {
         return new AuthInfo("vasya", "qwerty123");
     }
-        @Value
-        public static class VerificationCode {
-            private String code;
-        }
+    @Value
+    public static class VerificationCode {
+        private String code;
+    }
 
-        public static VerificationCode getVerificationCodeFor(AuthInfo authInfo) {
-            return new VerificationCode("12345");
-        }
+    public static VerificationCode getValidVerificationCodeFor() {
+
+        return new VerificationCode("12345");
+    }
     public static String firstCardNumber() {
 
         String number = "5559 0000 0000 0001";
