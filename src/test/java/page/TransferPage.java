@@ -28,7 +28,7 @@ public DashboardPage deposit (int depositAmount, String selectedCard) {
     from.setValue(selectedCard);
     }
 
-    private void setAmount(int depositAmount) {
+    public void setAmount(int depositAmount) {
         amount.sendKeys(Keys.CONTROL+"A");
         amount.sendKeys(Keys.DELETE);
         amount.setValue(Integer.toString(depositAmount));
