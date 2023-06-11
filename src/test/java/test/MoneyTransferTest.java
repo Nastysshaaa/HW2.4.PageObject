@@ -1,7 +1,7 @@
 package test;
 
+import com.codeborne.selenide.Condition;
 import data.DataHelper;
-import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import page.DashboardPage;
 import page.LoginPage;
 import page.TransferPage;
 import org.openqa.selenium.Keys;
-import data.DataHelper;
+
 
 import static com.codeborne.selenide.Selenide.open;
 
@@ -38,13 +38,124 @@ public class MoneyTransferTest {
     }
 
     @Test
-    void transferFirstCard() {
+    void transferToFirstCard() {
         int actual1 = dashboardPage.depositFirstCard().deposit(500, DataHelper.secondCardNumber())
                 .getFirstCardBalance();
         Assertions.assertEquals(10500, actual1);
         int actual2 = dashboardPage.getSecondCardBalance();
         Assertions.assertEquals(9500, actual2);
     }
-
-
+    @Test
+    void transferToSecondCard(){
+        int actual1 = dashboardPage.depositSecondCard().deposit(1500, DataHelper.firstCardNumber())
+                .getSecondCardBalance();
+        Assertions.assertEquals(11500, actual1);
+        int actual2 = dashboardPage.getFirstCardBalance();
+        Assertions.assertEquals(8500, actual2);
+    }
+    @Test
+    void transferAllAmountFromFirstCard() {
+        int actual1 = dashboardPage.depositSecondCard().deposit(10000, DataHelper.firstCardNumber())
+                .getSecondCardBalance();
+        Assertions.assertEquals(20_000, actual1);
+        int actual2 = dashboardPage.getFirstCardBalance();
+        Assertions.assertEquals(0, actual2);
+    }
+    @Test
+    void transferAllAmountFromSecondCard() {
+        int actual1 = dashboardPage.depositFirstCard().deposit(10000, DataHelper.secondCardNumber())
+                .getFirstCardBalance();
+        Assertions.assertEquals(20_000, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(0, actual2);
+    }
+    @Test
+    void transferFromFirstCardToFirstCard() {
+        int actual1 = dashboardPage.depositFirstCard().deposit(400, DataHelper.firstCardNumber())
+                .getFirstCardBalance();
+        Assertions.assertEquals(10_000, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+    }
+    @Test
+    void transferFromFirstCardToSecondCard() {
+        int actual1 = dashboardPage.depositSecondCard().deposit(400, DataHelper.secondCardNumber())
+                .getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+    }
+    @Test
+    void transferAmountEqualBoundaryAmountByFirstCard() {
+        int actual1 = dashboardPage.depositSecondCard().deposit(9999, DataHelper.firstCardNumber())
+                .getSecondCardBalance();
+        Assertions.assertEquals(19_999, actual1);
+        int actual2 = dashboardPage.getFirstCardBalance();
+        Assertions.assertEquals(1, actual2);
+    }
+    @Test
+    void transferAmountEqualBoundaryAmountBySecondCard() {
+        int actual1 = dashboardPage.depositFirstCard().deposit(9999, DataHelper.secondCardNumber())
+                .getFirstCardBalance();
+        Assertions.assertEquals(19_999, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(1, actual2);
+    }
+    @Test
+    void emptyFieldFromFirstCard() {
+        dashboardPage.depositFirstCard().deposit(500, "");
+        new TransferPage().checkErrorVisible();
+    }
+    @Test
+    void emptyFieldFromSecondCard() {
+        dashboardPage.depositSecondCard().deposit(500, "");
+        new TransferPage().checkErrorVisible();
+    }
+    @Test
+    void emptyFieldAmount() {
+        int actual1 = dashboardPage.depositFirstCard().deposit(0, DataHelper.secondCardNumber())
+                .getFirstCardBalance();
+        Assertions.assertEquals(10_000, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+    }
+    @Test
+    void cancelClick() {
+        TransferPage transferPage = dashboardPage.depositFirstCard();
+        transferPage.setAmount(200);
+        transferPage.setSelectedCard(DataHelper.secondCardNumber());
+        new TransferPage().clickCancel();
+        int actual1 = dashboardPage.getFirstCardBalance();
+        Assertions.assertEquals(10_000, actual1);
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+    }
+    @Test
+    void invalidCardNumber() {
+        dashboardPage.depositSecondCard().deposit(200, DataHelper.invalidCardNumber());
+        new TransferPage().checkErrorVisible();
+    }
+    @Test
+    void checkSpecialSymbolInAmountField() {
+        TransferPage transferPage = dashboardPage.depositFirstCard();
+        transferPage.amount.sendKeys(Keys.CONTROL + "A");
+        transferPage.amount.sendKeys(Keys.DELETE);
+        transferPage.amount.setValue("#$@").shouldBe(Condition.empty);
+    }
+    @Test
+    void transferAmountMoreThanInFirstCard () {
+        int actual1 = dashboardPage.depositSecondCard().deposit(11_000, DataHelper.firstCardNumber())
+                .getSecondCardBalance();
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+        Assertions.assertEquals(10_000, actual1);
+    }
+    @Test
+    void transferAmountMoreThanInSecondCard() {
+        int actual1 = dashboardPage.depositFirstCard().deposit(15_000, DataHelper.secondCardNumber())
+                .getFirstCardBalance();
+        int actual2 = dashboardPage.getSecondCardBalance();
+        Assertions.assertEquals(10_000, actual2);
+        Assertions.assertEquals(10_000, actual1);
+    }
 }
