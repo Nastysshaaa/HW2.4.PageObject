@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class TransferPage {
-    public SelenideElement heading = $(withText("Пополнение карты"));
+    private SelenideElement heading = $(withText("Пополнение карты"));
     private SelenideElement amount = $("[data-test-id = amount] input");
     private SelenideElement from = $("[data-test-id=from] input");
     private SelenideElement to = $("[data-test-id=to] input");
@@ -17,7 +17,7 @@ public class TransferPage {
     private SelenideElement errorMessage = $("[data-test-id=error-notification]");
 
     public DashboardPage deposit(int depositAmount, String selectedCard) {
-        setAmount(depositAmount);
+        setAmount(String.valueOf(depositAmount));
         setSelectedCard(selectedCard);
         depositButton.click();
         return new DashboardPage();
@@ -29,14 +29,14 @@ public class TransferPage {
         from.setValue(selectedCard);
     }
 
-    public void setAmount(int depositAmount) {
+    public void setAmount(String checkSpecialSymbol) {
         amount.sendKeys(Keys.CONTROL + "A");
         amount.sendKeys(Keys.DELETE);
-        amount.setValue(Integer.toString(depositAmount));
+        amount.setValue(Integer.toString(Integer.parseInt(checkSpecialSymbol)));
     }
 
     public void checkSpecialSymbol() {
-        amount.setValue("#$@").shouldBe(Condition.empty);
+        amount.shouldBe(Condition.empty);
     }
 
     public void checkErrorVisible() {
