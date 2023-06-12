@@ -13,6 +13,7 @@ public class VerificationPage {
     public VerificationPage() {
         codeField.shouldBe(visible); //определен конструктор и проверяем что есть поле ввода кода, Selenide библиотека по умолчанию ждет 4 секунды, страница должна открыться
     }
+
     public DashboardPage validVerify(DataHelper.VerificationCode verificationCode) {
         codeField.setValue(verificationCode.getCode());
         verifyButton.click();

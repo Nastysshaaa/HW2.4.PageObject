@@ -15,6 +15,7 @@ public class DataHelper {
     public static AuthInfo getAuthInfo() {
         return new AuthInfo("vasya", "qwerty123");
     }
+
     @Value
     public static class VerificationCode {
         private String code;
@@ -24,6 +25,7 @@ public class DataHelper {
 
         return new VerificationCode("12345");
     }
+
     public static String firstCardNumber() {
 
         String number = "5559 0000 0000 0001";
@@ -35,9 +37,10 @@ public class DataHelper {
         String number = "5559 0000 0000 0002";
         return number;
     }
+
     public static String invalidCardNumber() {
         String number = "5559 1234 5678 9632";
         return number;
     }
-    }
+}
 
