@@ -32,10 +32,12 @@ public class TransferPage {
     public void setAmount(String checkSpecialSymbol) {
         amount.sendKeys(Keys.CONTROL + "A");
         amount.sendKeys(Keys.DELETE);
-        amount.setValue(Integer.toString(Integer.parseInt(checkSpecialSymbol)));
+        amount.setValue(String.valueOf(checkSpecialSymbol));
     }
 
     public void checkSpecialSymbol() {
+
+        amount.sendKeys(Keys.SHIFT);
         amount.shouldBe(Condition.empty);
     }
 

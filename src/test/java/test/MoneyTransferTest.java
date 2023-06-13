@@ -153,6 +153,7 @@ public class MoneyTransferTest {
     @Test
     void checkSpecialSymbolInAmountField() {
         TransferPage transferPage = dashboardPage.depositFirstCard();
+        transferPage.setAmount("@#$");
         transferPage.checkSpecialSymbol();
     }
 
